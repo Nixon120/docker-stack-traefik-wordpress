@@ -1,2 +1,2 @@
-# docker-stack-wordpress-traefik
+# docker-stack-traefik-wordpress
 Docker stack for traefik integrated wordpress
