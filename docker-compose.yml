@@ -20,10 +20,10 @@ services:
        labels:
          - "traefik.frontend.rule=Host:${HOST_DOMAIN}"
          - "traefik.port=80"
-         - "traefik.docker.network=${TRAEFIK_NETWORK}"
+         - "traefik.docker.network=traefik-net"
      networks:
       - default
-      - ${TRAEFIK_NETWORK}
+      - traefik-net
      restart: always
      environment:
        WORDPRESS_DB_HOST: db:3306
@@ -34,5 +34,5 @@ volumes:
     db_data:
 
 networks:
-    ${TRAEFIK_NETWORK}:
+    traefik-net:
         external: true
