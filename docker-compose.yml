@@ -4,21 +4,23 @@ services:
    db:
      image: mysql:5.7
      volumes:
-       - db_data:/var/lib/mysql
+       - db:/var/lib/mysql
      restart: always
      environment:
-       MYSQL_ROOT_PASSWORD: ${MYSQL_DATABASE_PASSWORD}
+       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
        MYSQL_DATABASE: wordpress
        MYSQL_USER: wordpress
        MYSQL_PASSWORD: wordpress
 
    wordpress:
      image: wordpress:latest
+     volumes:
+       - wp:/var/www/html
      ports:
        - 80
      deploy:
        labels:
-         - "traefik.frontend.rule=Host:${HOST_DOMAIN}"
+         - "traefik.frontend.rule=${TRAEFIK_FRONTEND_RULE}"
          - "traefik.port=80"
          - "traefik.docker.network=traefik-net"
      networks:
@@ -30,8 +32,23 @@ services:
        WORDPRESS_DB_USER: wordpress
        WORDPRESS_DB_PASSWORD: wordpress
 
+   backup:
+     image: blacklabelops/volumerize:1.0
+     volumes:
+       - db:/source/db_data:ro
+       - wp:/source/wp_data:ro
+       - backup:/backup
+     restart: always
+     environment:
+       TZ: ${VOLUMERIZE_TIMEZONE}
+       VOLUMERIZE_SOURCE: /source
+       VOLUMERIZE_TARGET: file:///backup
+       VOLUMERIZE_JOBBER_TIME: ${VOLUMERIZE_JOBBER_TIME}
+
 volumes:
-    db_data:
+    db:
+    wp:
+    backup:
 
 networks:
     traefik-net:
