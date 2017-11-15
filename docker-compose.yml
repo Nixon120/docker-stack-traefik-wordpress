@@ -35,8 +35,8 @@ services:
    backup:
      image: blacklabelops/volumerize:1.0
      volumes:
-       - db:/source/db_data:ro
-       - wp:/source/wp_data:ro
+       - db:/source/db:ro
+       - wp:/source/wp:ro
        - backup:/backup
      restart: always
      environment:
