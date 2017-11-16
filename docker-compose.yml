@@ -4,7 +4,7 @@ services:
    db:
      image: mysql:5.7
      volumes:
-       - db_data:/var/lib/mysql
+       - db:/var/lib/mysql
      restart: always
      environment:
        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -15,7 +15,7 @@ services:
    wordpress:
      image: wordpress:latest
      volumes:
-       - wp_data:/var/www/html
+       - wp:/var/www/html
      ports:
        - 80
      deploy:
@@ -35,9 +35,9 @@ services:
    backup:
      image: blacklabelops/volumerize:1.0
      volumes:
-       - db_data:/source/db:ro
-       - wp_data:/source/wp:ro
-       - backup_data:/backup
+       - db:/source/db:ro
+       - wp:/source/wp:ro
+       - backup:/backup
      restart: always
      environment:
        TZ: ${VOLUMERIZE_TIMEZONE}
@@ -46,9 +46,9 @@ services:
        VOLUMERIZE_JOBBER_TIME: ${VOLUMERIZE_JOBBER_TIME}
 
 volumes:
-    db_data:
-    wp_data:
-    backup_data:
+    db:
+    wp:
+    backup:
 
 networks:
     traefik-net:
